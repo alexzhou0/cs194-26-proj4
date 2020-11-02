@@ -1,37 +1,32 @@
-## Welcome to GitHub Pages
+## CS 194-26 Project 4: Facial Keypoint Detection with Neural Networks
 
-You can use the [editor on GitHub](https://github.com/alexzhou0/cs194-26-proj4/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+### Part 1: Nose Tip Detection
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+In this part, all we had to do was design and train a simple convolutional neural network to detect the point directly under a person's nose.
 
-### Markdown
+First, I had to make sure I was loading the ground-truth values correctly. The results of this can be seen below, along with the results from showing just the nose key-point.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+<img src="website_imgs/p1_ground_truth.png" alt="Labeled ground truths" width="500"/>
+<img src="website_imgs/p1_nose.png" alt="Labeled noses" width="500"/>
 
-```markdown
-Syntax highlighted code block
+Now that I knew I was loading the images and labels properly, I was able to start training. I chose to use a 3-layer network, with 12 7x7 filters for conv1, 16 5x5 filters for conv2, and 32 3x3 filters for conv3. I was first resizing the images to be 60 by 80 (as opposed to 480 by 640) for speed, so this results with the first fully connected layer having input size 32x4x7=896. I chose an output size of 256, leaving the last fc layer to have input 256 and output 2.
 
-# Header 1
-## Header 2
-### Header 3
+My training results are shown below. We can see that around 10 epochs, our model's loss gets worse temporarily, but then recovers to find a lower minima by 25 epochs.
 
-- Bulleted
-- List
+<img src="website_imgs/p1_graph.png" alt="Training graph for part 1" width="500"/>
 
-1. Numbered
-2. List
+This simple model seems to work decently, successfully detecting the nose point even on images of faces that are not from straight on. However, it also mislabels a lot of noses. This is probably because of insufficient training time, overfitting to training data, or a not complex enough model. Since this model is simply a proof-of-concept for latter parts of the project, though, its performance is sufficient.
 
-**Bold** and _Italic_ and `Code` text
+Some example results are shown below. Green is the ground-truth, and red is the network's output.
 
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/alexzhou0/cs194-26-proj4/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+<table>
+  <tr>
+    <td> Works </td>
+    <td> <img src="website_imgs/p1_work1.jpg" alt="Part 1 work 1" width="250"/> </td>
+    <td> <img src="website_imgs/p1_work2.jpg" alt="Part 1 work 2" width="250"/> </td>
+  </tr>
+  <tr>
+    <td> Do not work </td>
+    <td> <img src="website_imgs/p1_broke1.jpg" alt="Part 1 broken 1" width="250"/> </td>
+    <td> <img src="website_imgs/p1_broke2.jpg" alt="Part 1 broken 2" width="250"/> </td>
+</table>
